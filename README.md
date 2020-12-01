@@ -1,7 +1,7 @@
 ![Infodevelopers](https://infodev.com.np/static/media/infodev_logo.b52195ee.svg)
 
-## Public Service Recruitment Management System | State Public Service Commission (SPSC)
-
+## React - Redux Boilerplate
+### Please update the package according to the requirements
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
