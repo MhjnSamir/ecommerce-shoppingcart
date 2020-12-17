@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig, CancelTokenSource, Method } from 'axios';
+import Axios, { CancelTokenSource, Method } from 'axios';
 import { Dispatch } from 'redux';
 
 import { createDispatchTypes } from './default-action-type';

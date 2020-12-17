@@ -1,6 +1,7 @@
 import {createStore, applyMiddleware} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {persistStore, persistReducer} from 'redux-persist';
+import hardSet from 'redux-persist/es/stateReconciler/hardSet';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 
@@ -21,10 +22,13 @@ const persistConfig ={
     key: btoa(`${stateName.name}-state`.split("").reverse().join("")),
     // Local Storage as storage engine
     storage: storage,
+    // All incoming state is merged in with initial state
+    stateReconciler: hardSet
 }
 
 const pReducer = persistReducer(persistConfig, rootReducer)
 const middleware = applyMiddleware(thunk);
 
+// Redux store for reducers
 export const store = createStore(pReducer, composeWithDevTools(middleware));
 export const persistor = persistStore(store);
