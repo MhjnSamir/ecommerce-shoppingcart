@@ -32,11 +32,13 @@ const cancelToken: CancelTokenStatic = Axios.CancelToken;
 const source: CancelTokenSource = cancelToken.source();
 
 /**
- * Manages api calls and handles the responses
- * @param apiDetails api endpoint with corresponding redux action
- * @param requestData request data for the api endpoint
- * @param requestMethod request method for the api
- * @param cancelSource axois cancel token
+ * Manages api calls and handles the responses.
+ * 
+ * @param apiDetails api endpoint with corresponding redux action.
+ * @param requestData request data for the api endpoint.
+ * @param requestMethod request method for the api.
+ * @param cancelSource axois cancel token.
+ * @return {object} either fulfilled or rejected promise
  */
 export const makeApiRequest = (
   apiDetails: apiDetailType,
@@ -47,15 +49,24 @@ export const makeApiRequest = (
   // API URL
   let url: string = process.env.REACT_APP_API_ENDPOINT as string;
 
+  // Get access token from local storage.
   const access_token: string = TokenService.getAccessToken();
 
+  //Get request headers.
   const headers: RequestHeader = getRequestHeaders(apiDetails, access_token);
+
+  //Get transformed request data.
   const transformedRequestData: customRequestData = transformRequestData(
     apiDetails,
     requestData,
     basicAuth
   );
 
+  /**
+   * Config options for making requests.
+   * 
+   * {@link https://github.com/axios/axios#axiosrequestconfig-1}
+   */
   let axiosReqParams: AxiosRequestConfig = {
     url: apiDetails.controllerName,
     method: requestMethod,
@@ -75,6 +86,7 @@ export const makeApiRequest = (
   //     }
   // );
 
+  // send asynchronous HTTP requests to REST endpoints.
   return Axios.request(axiosReqParams)
     .then((response: AxiosResponse<ResponseData>) => {
       return response;
@@ -85,6 +97,13 @@ export const makeApiRequest = (
     });
 };
 
+/**
+ * Manages HTTP request headers according to dynamic action name.
+ * 
+ * @param {Object} apiDetails An object with {actionName} - redux action name and {controllerName} - corresponding endpoint to communicate with API.
+ * @param {string} access_token token from local storage.
+ * @returns {Object} headers with corresponding redux action name.
+ */
 const getRequestHeaders = (apiDetails: apiDetailType, access_token: string) => {
   let headers = {};
   switch (apiDetails.actionName) {
@@ -112,6 +131,14 @@ const getRequestHeaders = (apiDetails: apiDetailType, access_token: string) => {
   return headers;
 };
 
+/**
+ * Manages changes to the request data before it is sent to the server.This is only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'.
+ * 
+ * @param {Object} apiDetails An object with {actionName} - redux action name and {controllerName} - corresponding endpoint to communicate with API.
+ * @param {string} requestMethod A string of corresponding HTTP method.
+ * @param {Object} basicAuth Auth object which indicates HTTP Basic auth that should be used, and supplies credentials. This will be send an Authorization header, overwriting any existing Authorization custom headers you have set using headers.
+ * @returns {Object} transformed request data corresponding to redux action name.
+ */
 const transformRequestData = (
   apiDetails: apiDetailType,
   requestData: any,
@@ -141,10 +168,21 @@ const transformRequestData = (
   return transformedRequestData;
 };
 
+/**
+ * Manages stringifying any object
+ * @param {object} data 
+ * @returns {string} stringified value
+ */
 function getQueryString(data: { [key: string]: string } = {}) {
   return qs.stringify(data);
 }
 
+/**
+ * Construct a set of key/value pairs representing form fields and their values, which can then be easily used to send the request to the server.
+ * 
+ * @param  {object} requestData request data for the api endpoint.
+ * @returns appended value inside FormData object.
+ */
 function getFormData(requestData: { [key: string]: any }) {
   let formData = new FormData();
   for (let data in requestData) {
@@ -226,6 +264,12 @@ function getFormData(requestData: { [key: string]: any }) {
 
 // };
 
+/**
+ * Generic error handler to handle error events.
+ *
+ * @param {object} error
+ * @return {object} error response 
+ */
 let manageErrorResponse = (error: AxiosError) => {
   let errorResponse: ResponseError = {
     message: "Error",
@@ -240,7 +284,7 @@ let manageErrorResponse = (error: AxiosError) => {
     errorResponse.message = "Server could not be reached."; // No response was received
     errorResponse.noconnection = true;
   }
-  
+
   errorResponse.config = error.config; // Request Params Configs
   errorResponse.isAxiosError = error.isAxiosError; //If Axios Error
 
