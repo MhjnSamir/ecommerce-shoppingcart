@@ -1,6 +1,8 @@
 import { AnyAction, combineReducers } from "redux";
+import loginReducer from "./modules/login/login";
 
 export const appReducer = combineReducers({
+    loginData: loginReducer
 });
 
 export type RootState = ReturnType<typeof appReducer>;

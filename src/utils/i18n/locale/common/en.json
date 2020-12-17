@@ -1,0 +1,65 @@
+{
+    "header": {
+        "notification": "Notification",
+        "no-notification": "No notifications",
+        "viewall-notification": "View all"
+    },
+    "input": {
+        "yes": "Yes",
+        "no": "No",
+        "apply": "Apply",
+        "clear": "Clear",
+        "forward": "Forward",
+        "add": "Add",
+        "saveadd": "Save & Add",
+        "search": "Search",
+        "cancel": "Cancel",
+        "previous": "Back",
+        "submit": "Submit",
+        "approve": "Approve",
+        "reject": "Reject",
+        "publish": "Publish",
+        "approve-all": "Approve All",
+        "cancel-edit": "Cancel Edit"
+    },
+    "sn": "S.N.",
+    "paginate": {
+        "between": "showing"
+    },
+    "dashboard": {
+        "visualization": {
+            "title": "Data Visualization",
+            "nepal": {
+                "subject-count": {
+                    "title": "Individual/Organization Count in Nepal"
+                }
+            },
+            "world": {
+                "subject-count": {
+                    "title": "Individual/Organization Count Worldwide"
+                },
+                "subject-movement": {
+                    "title": "Individual/Organization Movement Worldwide"
+                }
+            }
+        },
+        "home": "Home"
+    },
+    "actions": {
+        "title": "Actions",
+        "status": "Status",
+        "edit": "Edit",
+        "download": "Download",
+        "view": "View",
+        "delete": "Delete"
+    },
+    "buttons": {
+        "update": "Update",
+        "next": "Next",
+        "previous": "Previous",
+        "submit": "Submit",
+        "save": "Save",
+        "filter": "Filter",
+        "reset": "Reset"
+    }
+}

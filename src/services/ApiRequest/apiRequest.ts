@@ -76,6 +76,10 @@ export const makeApiRequest = (
     timeout: 60 * 3 * 1000,
     cancelToken: cancelSource ? cancelSource.token : source.token,
   };
+  
+  if (apiDetails.actionName === "AUTHFILE") {
+      axiosReqParams.responseType = "blob";
+  }
 
   // Axios.interceptors.response.use(
   //     function (response) {
