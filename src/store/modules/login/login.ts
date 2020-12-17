@@ -4,7 +4,7 @@ import { createDefaultAction } from "../../helper/default-action";
 import { apiList } from "../../actionNames";
 
 const obj = defaultState;
-let apiDetails = apiList.token;
+let apiDetails = apiList.login;
 
 export default function loginReducer(store = { ...obj }, action) {
     let state = Object.assign({}, store);
