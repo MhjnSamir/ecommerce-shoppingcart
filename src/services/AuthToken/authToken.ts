@@ -5,32 +5,51 @@ interface AuthTokenService {
     clearToken: () => void;
 }
 
+/**
+ * Persist token item to web local storage
+ * 
+ * @param tokenObj token from server
+ */
 function setToken(tokenObj: any) {
     localStorage.setItem("access_token", tokenObj);
 }
 
+
+/**
+ * Get access token from storage.
+ *
+ * @returns {string}
+ */
 function getAccessToken(): string {
     let accessToken = "";
-    try{
+    try {
         accessToken = localStorage.getItem("access_token") || "";
     }
-    catch(e){
+    catch (e) {
         console.log("Local Store token error", e);
     }
     return accessToken;
 }
 
+/**
+ * Get refresh token from storage.
+ *
+ * @returns {string}
+ */
 function getRefreshToken(): string {
     let refreshToken = "";
-    try{
+    try {
         refreshToken = localStorage.getItem("refresh_token") || "";
     }
-    catch(e){
+    catch (e) {
         console.log("Local Store token error", e);
     }
     return refreshToken;
 }
 
+/**
+ * Remove tokens from local storage.
+ */
 function clearToken() {
     localStorage.removeItem("tk");
     localStorage.removeItem("access_token");
