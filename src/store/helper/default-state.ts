@@ -1,10 +1,9 @@
-import { DefaultState } from "../redux.model";
-
-export const defaultState: DefaultState<null> = {
-    status: null,
+const initialState: DefaultState = {
+    data: null,
+    message: "",
     isFetching: false,
     isFailed: false,
-    data: null,
-    message: null,
-    showMessage: false,
+    isSuccess: false
 }
+
+export default initialState;

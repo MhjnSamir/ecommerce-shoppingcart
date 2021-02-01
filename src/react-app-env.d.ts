@@ -1,24 +1,53 @@
-/**
-    Reference TypeScript types declarations that are specific to this project
-*/
-
 /// <reference types="react-scripts" />
 
-interface Window { 
-    jQuery: any;
+/**
+ * REDUX DEVTOOLS EXTENSION INSTALLED IN BROWSER
+ */
+interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
 }
 
-declare module 'react-pivottable/PivotTableUI' {
-    const PivotTableUI: any;
-    export default PivotTableUI;
+
+/**
+ * Default Redux Action
+ */
+type DefaultAction<TPayload = any> ={
+    type: string;
+    payload?: TPayload
+}
+interface DefaultState<TData = any>{
+    data: TData;
+    message: string;
+    isFetching: boolean;
+    isFailed: boolean;
+    isSuccess: boolean;
+}
+interface DefaultDispatchType{
+    progressDispatch: string;
+    successDispatch: string;
+    failureDispatch: string;
 }
 
-declare module 'react-pivottable/TableRenderers' {
-    const TableRenderers: any;
-    export default TableRenderers;
+/**
+ * Custom Route Detail
+ */
+type CustomRoute = {
+    path: string;
+    component: React.ComponentType<any>
+    children?: route[];
+    type?: string;
 }
+interface PrivateRouteProps{
+    appRoutes: route[]
+}
+interface PrivateRouteChildren{
+    children: route[]
+}
+/**
+ * Custom PrivateRoute redirect props
+ */
+type RouteRedirectProps = ({from: string; to: string;} | null)[]
 
-declare module 'react-pivottable/PlotlyRenderers' {
-    const PlotlyRenderers: any;
-    export default PlotlyRenderers;
-}
+/**
+ * 
+ */

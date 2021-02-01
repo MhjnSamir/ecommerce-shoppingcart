@@ -1,7 +1,9 @@
-import React, { Fragment, ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
+import { Link } from "react-router-dom";
+
 import Logo from "../../../assets/images/logo.png";
 import Image1 from "../../../assets/images/breifcase.png";
-import { Link } from "react-router-dom";
+
 interface Props {
 
 }

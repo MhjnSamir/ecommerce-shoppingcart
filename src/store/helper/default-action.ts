@@ -1,11 +1,40 @@
-import Axios, { CancelTokenSource, Method } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource, Method } from 'axios';
 import { Dispatch } from 'redux';
 
-import { createDispatchTypes } from './default-action-type';
-import { makeApiRequest } from '../../services/ApiRequest/apiRequest';
-import { apiDetailType, ResponseError } from '../../services/ApiRequest/apiRequest.model';
-import { requestTimeout } from '../../utils/timeout/timeout';
+import initDispatchTypes from './default-action-type';
+import initApiRequest from '../../services/api-request/api-request';
+import { apiDetailType } from '../actionNames';
+import { FailToast, SuccessToast } from '../../components/React/ToastNotifier/ToastNotifier';
+import { requestTimeoutLanguage, noConnectionLanguage } from '../../i18n/i18n';
 
+/**
+ * Request details for XMLHTTP request
+ */
+interface APIRequestDetail {
+    /**Request data for the API */
+    requestData?: any;
+    /**REST API Method */
+    requestMethod?: Method;
+    /**Request params */
+    params?: { [key: string]: any }
+    /**Axios cancel token source */
+    cancelSource?: CancelTokenSource;
+    /**Disable Success Toast */
+    disableSuccessToast?: boolean;
+    /**Disable Failure Toast */
+    disableFailureToast?: boolean;
+}
+
+interface CustomResponse<TData = any> extends AxiosResponse {
+    message: string;
+    data: TData | null;
+    status: number;
+    noconnection: boolean;
+    config: AxiosRequestConfig;
+    isAxiosError: boolean;
+}
+
+export type APIResponseDetail<TData = any> = Promise<CustomResponse<TData>>
 
 let timeoutLanguageCount = 0;
 let noServerConnectionLanguageCount = 0;
@@ -13,63 +42,71 @@ let noConnectionLanguageCount = 0;
 const axiosCancelSource = Axios.CancelToken.source();
 
 /**
- * Manages multiple action creator for dispatching action according to response.
- *  
- * @param {Object} apiDetails An object with {actionName} - redux action name and {controllerName} - corresponding endpoint to communicate with API.
- * @param {Function} dispatch  A function that accepts an action or an async action to handle async actions in addition to actions.
- * @param {any} requestData Data that needs to be send to server.
- * @param {string} requestMethod A string of corresponding HTTP method.
- * @param {Object} cancelSource An object with {token} and {cancel} to abort or cancel request. 
- * @returns {Object} API Response data
+ * Manages API call and updates reducer with success or failure
+ * @param apiDetails redux action and api config
+ * @param dispatch redux dispatch function
+ * @param apiRequestDetails request details for XMLHTTP request
  */
+export default async function initDefaultAction(apiDetails: apiDetailType, dispatch: Dispatch, apiRequestDetails: APIRequestDetail = {}) {
+    const { requestData, requestMethod, params, cancelSource, disableSuccessToast = false, disableFailureToast } = apiRequestDetails;
 
-export const createDefaultAction = async (apiDetails: apiDetailType, dispatch: Dispatch, requestData: any, requestMethod: Method, cancelSource?: CancelTokenSource) => {
     // Init Dispatch Types
-    const dispatchTypes = createDispatchTypes(apiDetails.actionName);
+    const dispatchTypes = initDispatchTypes(apiDetails.actionName);
 
     // Progress Dispatch
     dispatch({ type: dispatchTypes.progressDispatch, payload: null });
 
-    // API request
-    const responseData = await makeApiRequest(apiDetails, requestData, requestMethod, cancelSource || axiosCancelSource);
+    let responseData;
+    try {
+        responseData = await initApiRequest(apiDetails, requestData, requestMethod || apiDetails.requestMethod || "GET", params, cancelSource || axiosCancelSource);
 
-    // Success Dispatch
-    if ((responseData as ResponseError).data && !(responseData as ResponseError).isAxiosError) {
-        dispatch({ type: dispatchTypes.successDispatch, payload: responseData, requestData: requestData });
-    }
-    // Error Dispatch
-    else if ((responseData as ResponseError).data && !(responseData as ResponseError).isAxiosError) {
-        dispatch({ type: dispatchTypes.failureDispatch, payload: responseData, requestData: requestData });
-    }
+        // Success Dispatch
+        dispatch({ type: dispatchTypes.successDispatch, payload: responseData.data });
+        if (disableSuccessToast) {
+            // No work done
+        } else {
+            if (requestMethod !== "GET") {
+                SuccessToast(responseData.data?.message)
+            }
+        }
 
-    // HideMessage Dispatch
-    requestTimeout(() => {
-        dispatch({ type: dispatchTypes.hideMessage, payload: null });
-    }, 2000)
+    } catch (customThrownError) {
+        responseData = customThrownError;
 
+        // Failure Dispatch
+        dispatch({ type: dispatchTypes.failureDispatch, payload: responseData.data });
+        if (disableFailureToast) {
+            // No work done
+        } else {
+            responseData.data?.message && FailToast(responseData.data.message);
+        }
 
-    // Axios Timeout
-    if ((responseData as ResponseError).isAxiosError && (responseData.config as any)?.code === 'ECONNABORTED') {
-        if (!timeoutLanguageCount) {
-            // toastNotify(() => FailToast(timeoutLanguage()));
-            timeoutLanguageCount++;
+        // Axios Timeout
+        if (responseData.config.code === 'ECONNABORTED') {
+            if (!timeoutLanguageCount) {
+                timeoutLanguageCount++;
+                FailToast(requestTimeoutLanguage());
+            }
+        }
+
+        // No Connection
+        if (responseData.noconnection) {
+            // No Server Connection
+            if (responseData.message === 'Server could not be reached') {
+                if (!noServerConnectionLanguageCount) {
+                    noServerConnectionLanguageCount++;
+                    FailToast(noConnectionLanguage());
+                }
+            }
+            // No Connection
+            else if (responseData.config.code !== 'ECONNABORTED') {
+                if (!noConnectionLanguageCount) {
+                    noConnectionLanguageCount++;
+                    FailToast(noConnectionLanguage());
+                }
+            }
         }
     }
 
-    // No Server Connection
-    if ((responseData as ResponseError).isAxiosError && (responseData as ResponseError).noconnection && (responseData as ResponseError).message === 'Server could not be reached') {
-        if (!noServerConnectionLanguageCount) {
-            // toastNotify(() => FailToast(noServerConnectionLanguage()));
-            noServerConnectionLanguageCount++;
-        }
-    }
-    // No Connection
-    else if ((responseData as ResponseError).isAxiosError && (responseData as ResponseError).noconnection && (responseData.config as any)?.code !== 'ECONNABORTED') {
-        if (!noConnectionLanguageCount) {
-            // toastNotify(() => FailToast(noConnectionLanguage()));
-            noConnectionLanguageCount++;
-        }
-    }
-
-    return responseData;
+    return responseData.data as APIResponseDetail | Promise<any>;
 };

@@ -1,71 +1,51 @@
-import { defaultState } from "./default-state";
-import { DefaultState, Action } from "../redux.model";
-import { ResponseData } from "../../services/ApiRequest/apiRequest.model";
-
-/**
- * Manages default reducer for repetitive task
- * @param actionName action name for the reducer
- * @param action details for the reducer
- * @param state redux state
- */
-export function defaultReducer(actionName: string, action: Action<ResponseData>, state: DefaultState): DefaultState {
+export default function initDefaultReducer(actionName: string, action: DefaultAction, state: DefaultState): DefaultState {
     switch (action.type) {
         case actionName + "_PROGRESS": {
             return {
                 ...state,
                 isFetching: true,
                 isFailed: false,
-                status: 100
+                isSuccess: false,
             };
         }
 
         case actionName + "_SUCCESS": {
+            const { data, message } = action.payload!;
+
             return {
                 ...state,
-                status: action.payload.status ? 1 : 0,
                 isFetching: false,
                 isFailed: false,
-                data: action.payload.data,
-                message: action.payload.message,
-                showMessage: true,
+                isSuccess: true,
+                data,
+                message
             };
         }
 
         case actionName + "_FAILURE": {
-            return {
-                ...state,
-                status: action.payload?.status ? 1 : 0,
-                isFetching: false,
-                isFailed: true,
-                data: action.payload?.data,
-                message: action.payload?.message,
-                showMessage: true,
-            };
-        }
+            if (action.payload) {
+                const { data, message } = action.payload;
 
-        case actionName + "_HIDE_MESSAGE": {
-            return {
-                ...state,
-                isFetching: false,
-                isFailed: false,
-                showMessage: false,
-            };
-        }
-
-        case actionName + "_RESET": {
-            return { ...defaultState };
-        }
-
-        case actionName:
-            return {
-                ...state,
-                status: action.payload.status ? 1 : 0,
-                isFetching: false,
-                isFailed: false,
-                data: action.payload,
-                message: action.payload.message,
-                showMessage: true,
+                return {
+                    ...state,
+                    isFetching: false,
+                    isFailed: true,
+                    isSuccess: false,
+                    data: data || null,
+                    message: message || "Unable to process request"
+                };
             }
+            else {
+                return {
+                    ...state,
+                    isFetching: false,
+                    isFailed: true,
+                    isSuccess: false,
+                    data: null,
+                    message: "Unable to process request"
+                }
+            }
+        }
 
         default: {
             return state;

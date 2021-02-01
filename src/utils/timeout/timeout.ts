@@ -12,7 +12,7 @@ const requestTimeoutNoRaf = (fn: any, delay: number, registerCancel?: any) => {
     registerCancel && registerCancel(() => clearTimeout(timeoutId));
 }
 
-const requestTimeoutRaf = (fn, delay, registerCancel) => {
+const requestTimeoutRaf = (fn: any, delay: any, registerCancel: any) => {
     const start = new Date().getTime();
 
     const loop = () => {
@@ -32,8 +32,4 @@ const requestTimeoutRaf = (fn, delay, registerCancel) => {
     registerCancel && registerCancel(() => cancelAnimationFrame(raf));
 };
 
-/**
- * Custom timeout using requestAnimationFrame
- * uses setTimeout for fallback support
- */
 export const requestTimeout = Boolean(browserSupportsRaf) ? requestTimeoutRaf : requestTimeoutNoRaf;
