@@ -47,6 +47,8 @@
     "build": "env-cmd -f .env react-scripts build",
     "build:dev": "env-cmd -f .env.dev react-scripts build",
     "build:prod": "env-cmd -f .env.prod react-scripts build",
+    "clean:build": "git rm -rf ./build",
+    "clean:module": "git rm -rf ./node_modules",
     "test": "react-scripts test"
   },
   "eslintConfig": {
