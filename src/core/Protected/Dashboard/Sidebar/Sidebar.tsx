@@ -14,11 +14,11 @@ const Sidebar = (props: Props) => {
 
     return (
         <aside className="sidebar">
-            <div className="d-flex justify-content-between align-items-center">
-                <div className="sidebar-logo mb-3">
+            <div className="d-flex justify-content-between align-items-center my-3">
+                <div className="sidebar-logo">
                     <img src={Logo} alt="Rastriya Banijya Bank" className="logo" />
                 </div>
-                    <h6 className="text-white ml-2">Province Public Service Commision</h6>
+                <h6 className="text-white ml-2 des sidebar-brand">Directorate of Vehicle Management</h6>
                 <div className="toggler-close" onClick={togglesidebar}>
                     <span className="ic-close"></span>
                 </div>
@@ -53,21 +53,22 @@ const Sidebar = (props: Props) => {
                         </li>
                     </ul> */}
                     <NavLink to="/home" activeClassName="active">
-                        <span className="ic-meter mr-2"></span>
                         Dashboard
                     </NavLink>
-                    <NavLink to="/vacancy-application" activeClassName="active">
-                        <span className="ic-meter mr-2"></span>
-                        My Profile
+                    <NavLink to="/vehicle-list" activeClassName="active">
+                        Vehicle Registration
                     </NavLink>
-                    <NavLink to="/vacancy-list" activeClassName="active">
+                    <NavLink to="/admin/vehicle-approval" activeClassName="active">
+                        Approval
+                    </NavLink>                    
+                    {/* <NavLink to="/vacancy-list" activeClassName="active">
                         <span className="ic-meter mr-2"></span>
                         Vacancy
                     </NavLink>
                     <NavLink to="/vacancy-applied" activeClassName="active">
                         <span className="ic-meter mr-2"></span>
                         My Application
-                    </NavLink>
+                    </NavLink> */}
                 </li>
             </ul>
 
