@@ -34,8 +34,34 @@ export default {
                 type: 'inline-radio',
                 options: ['sm', 'md', 'lg', 'xl'],
               },
+        },
+        filter: {
+            table: {
+                category: 'Table Filter'
+            }
+        },
+        filterText: {
+            table: {
+                category: 'Table Filter'
+            }
+        },
+         serverPagination: {
+            table: {
+                category: 'Server Side Pagination'
+            }
          },
-         serverPaginationParams: { table: { expanded: true } }
+         serverPaginationParams: {
+            control: { type: "object" },
+            defaultValue: {
+                gotoPage: (count = 1) => "Paginate Action",
+                currentPage: 1,
+                rowPerPage: 10,
+                totalItem: 10,
+            },
+            table: {
+                category: 'Server Side Pagination'
+            }
+         }
     },
 } as Meta;
 

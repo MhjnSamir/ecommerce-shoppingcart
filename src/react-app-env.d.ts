@@ -7,6 +7,11 @@ interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
 }
 
+/**
+ * React Select Option Type
+ */
+interface OptionType { label: string; value: string }
+
 
 /**
  * Default Redux Action
