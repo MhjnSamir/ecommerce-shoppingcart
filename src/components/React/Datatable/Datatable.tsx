@@ -2,31 +2,46 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useTable, useGlobalFilter, usePagination, useSortBy } from 'react-table';
 import { Table } from 'reactstrap';
 
-import { getTextByLanguage } from '../../../i18n/i18n';
+import { getTextByLanguage } from 'i18n/i18n';
 import "../LoadingButton/loading-theme.scss"
 
-interface Props {
-    columns: any[];
-    data: any;
-    pagination?: boolean;
-    className?: string;
-    size?: string;
-    loading?: boolean;
-    filter?: boolean;
-    globalFilterText?: string;
-    isBackenPagination?: boolean
-    backendPaginationData?: BackendPaginationProps
-}
+enum TableSize { sm, md, lg, xl }
 
 interface BackendPaginationProps {
-    currentPage: number | string
-    totalItem: number | string
-    rowPerPage: number | string
-    gotoPage: (pageNumber: number, data: any) => void;
-    activeStatus: string
+    currentPage: number;
+    rowPerPage: number;
+    totalItem: number;
+    gotoPage: (pageNumber: number) => void;
 }
-export default function Datatable(props: Props): ReactElement {
-    const { columns, data = [], pagination = false, className, size, loading, filter, globalFilterText, backendPaginationData, isBackenPagination } = props;
+export interface DatatableProps {
+    columns: any[];
+    data: any;
+    className?: string;
+    striped?: boolean;
+    size?: TableSize;
+    pagination?: boolean;
+    loading?: boolean;
+
+    filter?: boolean;
+    filterText?: string;
+
+    /**
+     * For Server Side Pagination
+     */
+    serverPagination?: boolean
+    serverPaginationParams?: BackendPaginationProps
+}
+
+export default function Datatable(props: DatatableProps): ReactElement {
+    const { 
+        columns, data = [], 
+        className, size, 
+        pagination = false, 
+        loading, striped = true, 
+        filter, filterText, 
+        serverPaginationParams, serverPagination = false
+    } = props;
+
     const {
         getTableProps, getTableBodyProps, headerGroups, rows, prepareRow,
         page,
@@ -45,28 +60,21 @@ export default function Datatable(props: Props): ReactElement {
     useEffect(() => {
         // For Filter of all columns
         if (filter) {
-            setGlobalFilter(globalFilterText)
+            setGlobalFilter(filterText)
         } else {
             setGlobalFilter("")
         }
-        // eslint-disable-next-line
-    }, [globalFilterText, filter])
+    }, [filterText, filter])
 
 
     useEffect(() => {
-        // Auto paginate pages
-        if (data.length > 10 || pagination) {
-            setinitPagination(true);
-        } else {
-            setinitPagination(false);
-        }
-        // eslint-disable-next-line
-    }, [data, pagination])
+        setinitPagination(pagination || serverPagination);
+    }, [pagination, serverPagination])
 
     return (
         <>
             <div className="table-responsive">
-                <Table className={className || "table-02 table-striped table-rounded d-xl-table"} size={size || "sm"} {...getTableProps()}>
+                <Table className={className || "table-02 table-rounded"} striped={striped}  size={size || "sm"} {...getTableProps()}>
                     <thead>
                         {headerGroups.map(headerGroup => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -146,32 +154,32 @@ export default function Datatable(props: Props): ReactElement {
                     </div>
 
                     <PaginationNumbers
-                        currentPage={(isBackenPagination && backendPaginationData) ? +backendPaginationData.currentPage : pageIndex}
-                        totalItem={(isBackenPagination && backendPaginationData) ? +backendPaginationData.totalItem : rows.length}
-                        rowPerPage={(isBackenPagination && backendPaginationData) ? +backendPaginationData.rowPerPage : pageSize}
+                        currentPage={(serverPagination && serverPaginationParams) ? serverPaginationParams.currentPage : pageIndex}
+                        totalItem={(serverPagination && serverPaginationParams) ? serverPaginationParams.totalItem : rows.length}
+                        rowPerPage={(serverPagination && serverPaginationParams) ? serverPaginationParams.rowPerPage : pageSize}
                         gotoPage={(pageNumber: number) => {
-                            if (isBackenPagination && backendPaginationData) {
-                                const { activeStatus, gotoPage } = backendPaginationData
-                                gotoPage(pageNumber, activeStatus)
+                            if (serverPagination && serverPaginationParams) {
+                                const { gotoPage } = serverPaginationParams;
+                                gotoPage(pageNumber)
                             } else {
                                 gotoPage(pageNumber)
                             }
                         }
-                            //  (isBackenPagination && backendPaginationData) ? backendPaginationData.gotoPage : gotoPage
                         }
                         goPrevious={() => {
-                            if (isBackenPagination && backendPaginationData) {
-                                +backendPaginationData.currentPage > 0 && backendPaginationData.gotoPage(+backendPaginationData.currentPage - 1, backendPaginationData.activeStatus)
+                            if (serverPagination && serverPaginationParams) {
+                                serverPaginationParams.currentPage > 0 && serverPaginationParams.gotoPage(serverPaginationParams.currentPage - 1)
                             } else {
-                                canPreviousPage && previousPage()
+                                canPreviousPage && previousPage();
                             }
                         }}
                         goNext={() => {
-                            if (isBackenPagination && backendPaginationData) {
-                                const { currentPage, rowPerPage, totalItem, activeStatus, gotoPage } = backendPaginationData
-                                getTotalPage(+totalItem, +rowPerPage) !== +currentPage + 1 && gotoPage(+currentPage + 1, activeStatus)
+                            if (serverPagination && serverPaginationParams) {
+                                const { currentPage, rowPerPage, totalItem, gotoPage } = serverPaginationParams;
+
+                                getTotalPage(totalItem, rowPerPage) !== currentPage + 1 && gotoPage(currentPage + 1)
                             } else {
-                                canNextPage && nextPage()
+                                canNextPage && nextPage();
                             }
                         }}
                     />

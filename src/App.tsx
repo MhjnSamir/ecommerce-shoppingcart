@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import './App.scss';
 
-import PrivateRoute from './routes/PrivateRoute/PrivateRoute';
-import { appRoutes } from './routes';
-import { RootState } from './store/root-reducer';
-import { geti18nLanguage, switchI18nLanguage } from './store/modules/i18n/i18n';
-import useAuthentication from './services/authentication/AuthenticationService';
-import toast from './components/React/ToastNotifier/ToastNotifier';
+import { appRoutes } from 'routes';
+import PrivateRoute from 'routes/PrivateRoute/PrivateRoute';
+
+import { RootState } from 'store/root-reducer';
+import { geti18nLanguage, switchI18nLanguage } from 'store/modules/i18n/i18n';
+
+import toast from 'components/React/ToastNotifier/ToastNotifier';
+import useAuthentication from 'services/authentication/AuthenticationService';
 
 // Initialize Notification Toaster
 toast.configure({
