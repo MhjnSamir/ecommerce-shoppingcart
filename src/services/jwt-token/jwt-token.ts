@@ -1,3 +1,6 @@
+import { FailToast } from "components/React/ToastNotifier/ToastNotifier";
+import { getTextByLanguage } from "i18n/i18n";
+
 interface AuthTokenService {
     setToken: Function;
     getAccessToken: Function;
@@ -5,27 +8,41 @@ interface AuthTokenService {
     clearToken: Function;
 }
 
+
 const [at, rt] = [btoa(btoa("access_token")), btoa(btoa("refresh_token"))] 
-// User Agent text data
-const ua = btoa(btoa(navigator.userAgent.replace(/[^A-Za-z]/g,'')))
-// Product
-const p = btoa(btoa(navigator.product))
+
 const encodeToken = (token: string) => {
     try {
-        return JSON.stringify({ uavrt: ua, pvrt: p, tkvrt: token });
+        const tokenWithBrowserData = JSON.stringify({ tkvrt: token });
+        const tokenWithBrowserDataEncoded = btoa(tokenWithBrowserData);
+        const tokenWithBrowserDataEncodedSplit = [tokenWithBrowserDataEncoded.substring(0, 20), tokenWithBrowserDataEncoded.substring(20)].reverse().join("");
+        
+        return tokenWithBrowserDataEncodedSplit;
+
     } catch (e) {
+        console.log("Error encoding token", e);
         return token;
     }
 }
 const decodeToken = (token: string) => {
+    if(!token) return "";
+
     try {
-        const {uavrt, pvrt, tkvrt} = JSON.parse(token);
-        if(uavrt === ua && pvrt === p)
+        const tokenWithBrowserDataEncodedSplit = [token.substring(0, token.length - 20), token.substring(token.length - 20)].reverse().join("");
+        const tokenWithBrowserData = atob(tokenWithBrowserDataEncodedSplit);
+        const {tkvrt} = JSON.parse(tokenWithBrowserData);
+
         return tkvrt;
+
     } catch (e) {
+        console.log("Error decoding token", e);
+
+        clearToken();
+        FailToast(getTextByLanguage("Your session has expired.", "तपाईको सत्रको समयावधि सकियो।"))
         return token;
     }
 }
+
 
 function setToken(tokenObj: any) {
     try{
@@ -36,7 +53,7 @@ function setToken(tokenObj: any) {
     }
 }
 
-function getAccessToken() {
+function getAccessToken(): string {
     let accessToken = "";
     try{
         accessToken = decodeToken(localStorage.getItem(at) || "");
@@ -47,7 +64,7 @@ function getAccessToken() {
     return accessToken;
 }
 
-function getRefreshToken() {
+function getRefreshToken(): string {
     let refreshToken = "";
     try{
         refreshToken = localStorage.getItem(rt) || "";

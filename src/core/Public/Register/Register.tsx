@@ -5,15 +5,15 @@ import { string as YupString, object as YupObject } from 'yup';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps, shallowEqual, useSelector } from 'react-redux';
 
-import LoadingButton from '../../../components/React/LoadingButton/LoadingButton';
-import { RootState } from '../../../store/root-reducer';
-import FormikValidationError from '../../../components/React/FormikValidationError/FormikValidationError';
+import LoadingButton from 'components/React/LoadingButton/LoadingButton';
+import FormikValidationError from 'components/React/FormikValidationError/FormikValidationError';
 
-import { switchI18nLanguage } from '../../../store/modules/i18n/i18n';
-import { registerUser } from '../../../store/modules/register/register';
+import { RootState } from 'store/root-reducer';
+import { switchI18nLanguage } from 'store/modules/i18n/i18n';
+import { registerUser } from 'store/modules/register/register';
 
-import Logo from "../../../assets/images/logo.png";
-import loginImg from "../../../assets/images/Sunset_&_Tea_Garden.jpg";
+import Logo from "assets/images/logo.png";
+import loginImg from "assets/images/Sunset_&_Tea_Garden.jpg";
 
 interface Props extends PropsFromRedux { }
 export interface RegisterCredentials {
@@ -70,136 +70,6 @@ function Register(props: Props): ReactElement {
                 </div>
             </div>
         </div>
-        // <div className="app theme-dark-blue">
-        //         <div className="container-fluid login-wrapper">
-        //             <div className="login-box register-box">
-        //                 <div className="login-box-right">
-        //                     <form>
-        //                         <div className="logo-box">
-        //                             <img src={Logo} alt="logo-np-government" />
-        //                         </div>
-        //                         <h5 className="mb-3 font-bold">Register</h5>
-
-        //                         <section className="mb-4">
-        //                             <h6 className="heading-line mb-3">User Detail</h6>
-        //                             <div className="row">
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="username">Username</label>
-        //                                     <input type="text" className="form-control" name="username" />
-        //                                 </div>
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="email">Email</label>
-        //                                     <input type="email" className="form-control" name="email" />
-        //                                 </div>
-        //                             </div>
-        //                             <div className="row">
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="password">Password</label>
-        //                                     <div className="custom-input">
-        //                                         <input type="password" className="form-control" name="password" />
-        //                                         <span className="ic-hidden text-coolGray600"></span>
-        //                                     </div>
-        //                                 </div>
-        //                             </div>
-        //                         </section>
-        //                         <section className="mb-4">
-        //                             <h6 className="heading-line mb-3">Personal Details</h6>
-        //                             <div className="row">
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="username">First Name</label>
-        //                                     <input type="text" className="form-control" name="username" />
-        //                                 </div>
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="middlename">Middle Name</label>
-        //                                     <input type="text" className="form-control" name="middlename" />
-        //                                 </div>
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="lastname">Last Name</label>
-        //                                     <input type="text" className="form-control" name="lastname" />
-        //                                 </div>
-        //                             </div>
-        //                             <div className="row">
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="mobno">Mobile No.</label>
-        //                                     <input type="text" className="form-control" name="mobno" />
-        //                                 </div>
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="phno">Phone No.</label>
-        //                                     <input type="number" className="form-control" name="phno" />
-        //                                 </div>
-        //                                 <div className="col-lg-4 form-group">
-        //                                     <label htmlFor="panno">PAN No.</label>
-        //                                     <input type="text" className="form-control" name="panno" />
-        //                                 </div>
-        //                             </div>
-        //                         </section>
-        //                         <section className="mb-4">
-        //                             <h6 className="heading-line mb-3">Address</h6>
-        //                             <div className="row">
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="district">District</label>
-        //                                     <select name="district" id="" className="form-control">
-        //                                         <option value="" selected disabled>Select...</option>
-        //                                         <option value="">Kathmandu</option>
-        //                                     </select>
-        //                                 </div>
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="municipality">Municipality</label>
-        //                                     <select name="municipality" id="" className="form-control">
-        //                                         <option value="" selected disabled>Select...</option>
-        //                                         <option value="">Kathmandu Municipality</option>
-        //                                     </select>
-        //                                 </div>
-        //                             </div>
-        //                             <div className="row">
-        //                                 <div className="col-lg-2 form-group">
-        //                                     <label htmlFor="mobno">Ward No.</label>
-        //                                     <input type="text" className="form-control" name="mobno" />
-        //                                 </div>
-        //                                 <div className="col-lg-6 form-group">
-        //                                     <label htmlFor="phno">Street</label>
-        //                                     <input type="number" className="form-control" name="phno" />
-        //                                 </div>
-        //                             </div>
-        //                         </section>
-
-        //                         <section className="mb-4">
-        //                             <h6 className="heading-line mb-3">Organization Details</h6>
-
-        //                             <div className="row">
-        //                                 <div className="col-md-12 form-group">
-        //                                     <label htmlFor="orgName">Organization/Company Name</label>
-        //                                     <input type="text" className="form-control" name="orgName" />
-        //                                 </div>
-        //                                 <div className="col-md-4 form-group">
-        //                                     <label htmlFor="regNo.">Registration No.</label>
-        //                                     <input type="text" className="form-control" name="regNo." />
-        //                                 </div>
-        //                                 <div className="col-md-4 form-group">
-        //                                     <label htmlFor="regDate">Registration Date</label>
-        //                                     <input type="date" className="form-control" name="regDate" />
-        //                                 </div>
-        //                                 <div className="col-md-4 form-group">
-        //                                     <label htmlFor="compPANno">PAN No.</label>
-        //                                     <input type="text" className="form-control" name="compPANno" />
-        //                                 </div>
-        //                             </div>
-        //                         </section>
-
-        //                         <div className="mt-3 text-center d-flex justify-content-between">
-        //                             <Link to="/login" className="btn btn-outline-primary">
-        //                                 Back to login
-        //                         </Link>
-        //                             <button type="submit" className="btn btn-primary ">
-        //                                 Register
-        //                         </button>
-        //                         </div>
-        //                     </form>
-        //                 </div>
-        //             </div>
-
-        //         </div>
-        //     </div>
     )
 }
 
@@ -326,11 +196,7 @@ const RegisterForm = ({ handleRegister, registering }: RegisterFormProps) => {
                     {(userTypeStep && !registerStep) && <button onClick={previousNextHandler} type="button" className="btn btn-primary">
                         {t("buttons.next")}
                     </button>}
-
-                    {/* {registerStep && <button type="submit" className="btn btn-primary">
-                        Next
-                    </button>} */}
-
+                    
                     {registerStep && <LoadingButton className="btn btn-primary" type="submit" text={t("register:title")} disabled={registering} loading={registering} />}
                 </div>
             </div>

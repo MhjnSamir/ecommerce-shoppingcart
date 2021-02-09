@@ -5,17 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { string as YupString, object as YupObject } from 'yup';
 
-import LoadingButton from '../../../components/React/LoadingButton/LoadingButton';
-import FormikValidationError from '../../../components/React/FormikValidationError/FormikValidationError';
+import LoadingButton from 'components/React/LoadingButton/LoadingButton';
+import FormikValidationError from 'components/React/FormikValidationError/FormikValidationError';
 
-import { RootState } from '../../../store/root-reducer';
-import { loginUser } from '../../../store/modules/login/login';
-import { switchI18nLanguage } from '../../../store/modules/i18n/i18n';
+import { RootState } from 'store/root-reducer';
+import { loginUser } from 'store/modules/login/login';
+import { switchI18nLanguage } from 'store/modules/i18n/i18n';
 
 
-import Logo from "../../../assets/images/logo.png";
-import loginImg from "../../../assets/images/Sunset_&_Tea_Garden.jpg";
-import { i18nLanguages } from '../../../i18n/i18n';
+import Logo from "assets/images/logo.png";
+import loginImg from "assets/images/Sunset_&_Tea_Garden.jpg";
+import { i18nLanguages } from 'i18n/i18n';
 
 
 interface Props extends PropsFromRedux { }

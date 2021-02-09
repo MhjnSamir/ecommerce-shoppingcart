@@ -7,7 +7,7 @@ import Axios, {
     Method,
     AxiosBasicCredentials,
 } from "axios";
-import { apiDetailType } from "../../store/actionNames";
+import { apiDetailType } from "store/actionNames";
 
 import TokenService from "../jwt-token/jwt-token";
 

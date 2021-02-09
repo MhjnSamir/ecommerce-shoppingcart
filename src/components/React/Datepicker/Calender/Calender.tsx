@@ -28,19 +28,7 @@ const Calender: FunctionComponent<CalenderProps> = ({ value, events, minDate, ma
             !value && setSelectedDate(parsedDateValue);
             !value && setCalenderDate(parsedDateValue);
         }
-    }, [minDate])
-
-    // useEffect(() => {
-    //     if (isInitialized) {
-    //         events.change && events.change(
-    //             stitchDate({
-    //                 year: selectedDate.bsYear,
-    //                 month: selectedDate.bsMonth,
-    //                 day: selectedDate.bsDay,
-    //             }),
-    //         )
-    //     }
-    // }, [selectedDate, isInitialized])
+    }, [minDate, value])
 
     const onPreviousMonthHandler = useCallback(() => {
         executionDelegation(
@@ -72,7 +60,7 @@ const Calender: FunctionComponent<CalenderProps> = ({ value, events, minDate, ma
                 }
             },
         )
-    }, [])
+    }, [calenderDate.bsMonth, calenderDate.bsYear, events])
 
     const onNextMonthClickHandler = useCallback(() => {
         executionDelegation(
@@ -104,7 +92,7 @@ const Calender: FunctionComponent<CalenderProps> = ({ value, events, minDate, ma
                 }
             },
         )
-    }, [])
+    }, [calenderDate.bsMonth, calenderDate.bsYear, events])
 
     const onTodayClickHandler = useCallback(() => {
         const today = parseBSDate(ADToBS(new Date()))
