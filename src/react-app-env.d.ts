@@ -56,3 +56,4 @@ type RouteRedirectProps = ({from: string; to: string;} | null)[]
 /**
  * 
  */
+type TTranslationFunction = (key: string) => string
