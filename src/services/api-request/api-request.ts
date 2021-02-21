@@ -28,7 +28,7 @@ const source: CancelTokenSource = cancelToken.source();
 
 export default function initApiRequest(apiDetails: apiDetailType, requestData: any, requestMethod: Method, params?: RequestParam, cancelSource?: CancelTokenSource) {
     // API URL
-    let url = process.env.REACT_APP_VRTSMS_ENDPOINT as string;
+    let url = process.env.REACT_APP_API_ENDPOINT as string;
     const access_token: string = TokenService.getAccessToken();
 
     const headers = getRequestHeaders(apiDetails, access_token);
