@@ -5,9 +5,9 @@ import FallbackLoader from '../../../components/React/FallbackLoader/FallbackLoa
 import PrivateRoute from '../../../routes/PrivateRoute/PrivateRoute';
 import { getAllProductList } from '../../../store/modules/product/getAllProduct';
 import { RootState } from '../../../store/root-reducer';
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { addItem } from 'store/modules/product/cartAction';
-
+import toast from 'components/React/ToastNotifier/ToastNotifier';
 
 interface Props extends PropsFromRedux {
   children: CustomRoute[];
@@ -67,12 +67,12 @@ function ProductCart(props: Props): ReactElement {
   <button type="button" className="btn btn-primary">
     <i className="fas fa-search"></i>
   </button>
-    <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-      <li className="nav-item active">
-        <a className="nav-link text-white" >Shopping Cart</a>
-      </li>
+    <Link className="navbar-nav ml-auto mt-2 mt-lg-0" to="/cart">
+      {/* <li className="nav-item active"> */}
+        <span className="nav-link text-white">Shopping Cart</span>
+      {/* </li> */}
   
-    </ul>
+    </Link>
   
   </div>
 </nav>
@@ -93,7 +93,7 @@ function ProductCart(props: Props): ReactElement {
                   </div>
                   
                   <div className="m-auto">
-                    <button className="btn btn-primary" onClick={(product) => addItem(product)}>Add To Cart</button>
+                    <button className="btn btn-primary" onClick={(product) =>{ addItem(product); toast.success("Product added to cart")}}>Add To Cart</button>
                   </div>
                </div>
             </div>
