@@ -1,6 +1,6 @@
 {
   "name": "react-redux-boilerplate",
-  "version": "1.0",
+  "version": "1.0.0",
   "private": true,
   "author": {
     "name": "InfoDevelopers Pvt. Ltd.",
@@ -43,7 +43,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "start": "env-cmd -f .env.local react-scripts start",
+    "start": "env-cmd -f .env.local.example react-scripts start",
     "build": "env-cmd -f .env react-scripts build",
     "build:dev": "env-cmd -f .env.dev react-scripts build",
     "build:prod": "env-cmd -f .env.prod react-scripts build",

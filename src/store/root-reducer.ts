@@ -7,6 +7,7 @@ import TokenService from "../services/jwt-token/jwt-token";
 import externalServiceReducer from "./modules/externalService";
 import internalServiceReducer from './modules/internalService/index';
 import outhReducer from "./modules/oauthservice";
+import { productReducer } from "./modules/product";
 
 export const appReducer = combineReducers({
     i18nextData: i18nextReducer,
@@ -14,7 +15,9 @@ export const appReducer = combineReducers({
     registerData: registerReducer,
     externalServiceData: externalServiceReducer,
     internalServiceData: internalServiceReducer,
-    outhService: outhReducer
+    outhService: outhReducer,
+    product: productReducer,
+    
 });
 
 export type RootState = ReturnType<typeof appReducer>;

@@ -58,6 +58,12 @@ const apiDetails = {
         }
     },
     public: {
+        product: {
+            controllerName: "/api/v1/product",
+            actionName: "GET_ALL_PRODUCT",
+            requestMethod: RequestMethod.GET,
+            requestBodyType: RequestBodyType.NOAUTH
+        },
         register: {
             controllerName: "/external/public/user/registration",
             actionName: "REGISTER",
