@@ -1,71 +1,96 @@
-import * as React from 'react';
-import * as actions from '../../../store/modules/product/crudProduct';
-import { AppState, ProductItem, ShoppingCartLine } from '../../../store/modules/product/crudProduct';
-import { connect, ConnectedProps } from 'react-redux';
-import { AddProduct, RemoveProduct } from "../../../store/modules/product/crudProduct";
-// import { formatPrice } from "../utils";
-import { Dispatch } from 'redux';
+import React, { useMemo, useState } from 'react'
+import { connect, ConnectedProps } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import Datatable from 'components/React/Datatable/Datatable';
+import { RootState } from 'store/root-reducer'
+import { addItem, removeItem, deleteItem } from 'store/modules/product/cartAction';
+import { Row } from 'react-table';
+import toast from './../../../components/React/ToastNotifier/ToastNotifier';
 
-export interface Props extends PropsFromRedux {
-  list: ShoppingCartLine[];
-  totalPrice: number;
-  increment: (product: ProductItem) => AddProduct,
-  decrement: (product: ProductItem) => RemoveProduct,
-  location:{
-      state:{
-          product:{name: string,price: string,description: string}
-      }
+interface ProductProps extends PropsFromRedux { }
+
+const Cart = (props: ProductProps) => {
+  const { allCartData, totalPriceData, deleteItem,addItem,removeItem } = props;
+  const history = useHistory();
+
+  const handleDelete = (id: any) => {
+    deleteItem(id)
+    toast.success("Product Removed Sucessfully")
   }
-}
 
+  const columns = useMemo(() => [
+    { Header: "S.N", Cell: ({ row: { index } }: { row: Row }) => index + 1 },
+    { Header: "Product Name", accessor: "name" },
 
-
-class Cart extends React.Component<Props, {}> {
-    handleIncrement = () => {
-        const {name,price}= this.props.location.state.product;
-        let product={name,price}
-        // this.props.increment(product)
+    {
+      Header: "Quantity", accessor: "quantity", Cell: ({ row }: { row: Row<{ id: number }> }) => (
+        <ul className="list list__inline">
+          <li onClick={() => addItem(row.original)}>
+              +
+          </li>
+          <li>
+            {row.original.quantity}
+          </li>
+          <li onClick={() => removeItem(row.original)}>
+              -
+          </li>
+        </ul>
+      )
+    },
+    { Header: "Amount (In Rs)", id: 'price', accessor: (row) => row.price * row.quantity },
+    {
+      Header: "Actions", headerClass: 'text-right', accessor: "actions", Cell: ({ row }: { row: Row<{ id: number }> }) => (
+        <ul className="list list__inline">
+          <li>
+            <button title="Remove Item" className="btn btn-icon-only" onClick={() => handleDelete(row.original._id)}>
+            Remove
+            </button>
+          </li>
+        </ul>
+      )
     }
-  render() {
-     const {state} = this.props.location;
+  ], [])
 
-    return (
-      <div>
-        <div className="card-body text-center">
-        <h3>Products</h3>
-            <div className="row">
-                <div className="col-12 border-right">
-                    <h6>{state?.product.name}</h6>
-                    <span className="text-muted">Price: {state?.product.price}</span>
-                    <div className="font-weight-bold">{state?.product.description}</div>
-                </div>
-                
-                <div className="m-auto">
-                <button className="btn btn-primary mr-2" onClick={this.handleIncrement}>+</button>
-                <button className="btn btn-danger">-</button>
-
-                </div>
+  return (
+    <div className="container">
+      <h4 className="text-center">Your Items{console.log(allCartData)}</h4>
+      <div className="row">
+        <div className="col-lg-8 offset-md-2">
+          <div className="align-vertical justify-content-between mb-2 border-top pt-3">
+            <div className="align-vertical ml-auto">
+              <button className="btn btn-primary d-flex align-items-center" onClick={() => history.push('/product')}>
+                <span>Back</span>
+              </button>
             </div>
-        </div>  
+          </div>
+          <Datatable columns={columns} data={allCartData || []} />
+        </div>
+        <div className="col-lg-8 offset-md-2">
+          <div className="d-flex justify-content-end">
+            <span>Total Amount: Rs {totalPriceData}</span>
+          </div>
+        </div>
       </div>
-   
-    )
-}
-}
-export function mapStateToProps(state: AppState) {
-  return {
-    list: state.shoppingCart,
-    totalPrice: state.totalPrice,
-  };
+    </div>
+
+  )
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<actions.AppAction>) {
-  return {
-    increment: (product: ProductItem): AddProduct => dispatch(actions.addProduct(product)),
-    decrement: (product: ProductItem): RemoveProduct => dispatch(actions.removeProduct(product)),
-  };
-}
-const connector = connect(mapStateToProps, mapDispatchToProps)
-type PropsFromRedux = ConnectedProps<typeof connector>;
+const mapStateToProps = (state: any) => ({
+  allCartData: state.product?.cartProducts?.cartItems || [],
+  totalPriceData: state.product?.cartProducts?.cartItems.reduce(
+    (acc, cartItem) => acc + cartItem.quantity * cartItem.price,
+    0
+  ) || 0
+})
 
-export default connector(Cart);
+const mapDispatchToProps = {
+  addItem,
+  removeItem,
+  deleteItem
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+export default connector(Cart)

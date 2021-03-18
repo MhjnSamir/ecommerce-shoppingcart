@@ -2,7 +2,7 @@ import { addItemToCart, deleteItemFromCart, removeItemFromCart } from "./product
 import * as actionTypes from "./actionType";
 
 const INITIAL_STATE = {
-  cartItems: [],
+  cartItems: [] as any,
 };
 
 const cartReducer = (state = INITIAL_STATE, action: any) => {

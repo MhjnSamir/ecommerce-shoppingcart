@@ -69,7 +69,7 @@ function ProductCart(props: Props): ReactElement {
   </button>
     <Link className="navbar-nav ml-auto mt-2 mt-lg-0" to="/cart">
       {/* <li className="nav-item active"> */}
-        <span className="nav-link text-white">Shopping Cart</span>
+        <span className="nav-link text-white">Shopping Cart-{countProduct}</span>
       {/* </li> */}
   
     </Link>
@@ -93,7 +93,7 @@ function ProductCart(props: Props): ReactElement {
                   </div>
                   
                   <div className="m-auto">
-                    <button className="btn btn-primary" onClick={(product) =>{ addItem(product); toast.success("Product added to cart")}}>Add To Cart</button>
+                    <button className="btn btn-primary" onClick={() =>{ addItem(product); toast.success("Product added to cart"); setCountProduct(countProduct + 1)}}>Add To Cart</button>
                   </div>
                </div>
             </div>
@@ -109,7 +109,6 @@ function ProductCart(props: Props): ReactElement {
 
 const mapStateToProps = (state: RootState) => ({
   getAllProductListData: state.product.getAllProduct,
-//   totalProductCount: state.product.cartProducts?.cartItems?.reduce((acc, cartItem) => acc + cartItem.quantity, 0) || 0
 })
 
 const mapDispatchToProps = {

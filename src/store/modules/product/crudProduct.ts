@@ -39,7 +39,7 @@ export interface ShoppingCartLine {
     type: REMOVE_PRODUCT;
     payload: ProductItem;
   }
-  
+ 
 
 export default function crudProductReducer(state: AppState, action: AppAction): AppState {
   const { shoppingCart } = state;
